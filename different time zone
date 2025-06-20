@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+void convertTimeZone(int hour, int minute, float sourceOffset, float targetOffset) {
+    // Step 1: Convert source time to UTC
+    float totalMinutes = hour * 60 + minute;
+    totalMinutes -= sourceOffset * 60;
+
+    // Step 2: Convert UTC to target time zone
+    totalMinutes += targetOffset * 60;
+
+    // Adjust for overflow and underflow (modulo 1440 for 24 hours)
+    while (totalMinutes < 0) {
+        totalMinutes += 1440;
+    }
+    while (totalMinutes >= 1440) {
+        totalMinutes -= 1440;
+    }
+
+    int finalHour = (int)(totalMinutes) / 60;
+    int finalMinute = (int)(totalMinutes) % 60;
+
+    printf("Converted Time: %02d:%02d\n", finalHour, finalMinute);
+}
+
+int main() {
+    int hour, minute;
+    float sourceOffset, targetOffset;
+
+    printf("Enter time (hour minute): ");
+    scanf("%d %d", &hour, &minute);
+
+    printf("Enter source UTC offset (e.g., 5.5 for IST, -5 for EST): ");
+    scanf("%f", &sourceOffset);
+
+    printf("Enter target UTC offset (e.g., -5 for EST, 1 for CET): ");
+    scanf("%f", &targetOffset);
+
+    convertTimeZone(hour, minute, sourceOffset, targetOffset);
+
+    return 0;
+}
